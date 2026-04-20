@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.mostafa.aisupport.common.exception.NotFoundException;
 import com.mostafa.aisupport.ticket.domain.entity.Ticket;
+import com.mostafa.aisupport.ticket.domain.enums.TicketCategory;
 import com.mostafa.aisupport.ticket.domain.enums.TicketPriority;
 import com.mostafa.aisupport.ticket.domain.enums.TicketStatus;
 import com.mostafa.aisupport.ticket.infrastructure.TicketRepository;
@@ -69,6 +70,23 @@ public class TicketService {
     public Ticket updateTicketStatus(Long ticketId, TicketStatus status) {
         Ticket ticket = getTicketById(ticketId);
         ticket.updateStatus(status);
+        return ticketRepository.save(ticket);
+    }
+
+
+
+    public Ticket applyAiTriageResult(
+        Long ticketId,
+        String assignedTeam,
+        String aiSummary,
+        TicketCategory category,
+        TicketPriority priority
+    ) {
+        Ticket ticket = getTicketById(ticketId);
+        ticket.updateCategory(category);
+        ticket.updatePriority(priority);
+        ticket.assignTeam(assignedTeam);
+        ticket.updateAiSummary(aiSummary);
         return ticketRepository.save(ticket);
     }
 }
