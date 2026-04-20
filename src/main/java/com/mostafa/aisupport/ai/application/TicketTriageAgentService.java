@@ -8,9 +8,9 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.mostafa.aisupport.ai.api.dto.AiTriageResult;
+import com.mostafa.aisupport.ai.tools.service.TicketSupportTools;
 import com.mostafa.aisupport.ticket.domain.entity.Ticket;
 import com.mostafa.aisupport.ticket.domain.enums.AuthorType;
-
 @Service
 @Transactional
 public class TicketTriageAgentService {
@@ -18,15 +18,18 @@ public class TicketTriageAgentService {
     private final ChatClient chatClient;
     private final TicketService ticketService;
     private final TicketCommentService ticketCommentService;
+    private final TicketSupportTools ticketSupportTools;
 
     public TicketTriageAgentService(
             ChatClient chatClient,
             TicketService ticketService,
-            TicketCommentService ticketCommentService
+            TicketCommentService ticketCommentService,
+            TicketSupportTools ticketSupportTools
     ) {
         this.chatClient = chatClient;
         this.ticketService = ticketService;
         this.ticketCommentService = ticketCommentService;
+        this.ticketSupportTools = ticketSupportTools;
     }
 
     public AiTriageResult triageTicket(Long ticketId) {
@@ -35,7 +38,19 @@ public class TicketTriageAgentService {
         String prompt = buildPrompt(ticket);
 
         AiTriageResult result = chatClient.prompt()
+                .system("""
+                        You are an AI support triage agent.
+
+                        You may use tools when helpful.
+                        Use tools especially when:
+                        - you want to inspect existing comments
+                        - you want to review similar tickets
+                        - you want to inspect active agents for a selected team
+
+                        Be accurate and use only allowed enum values.
+                        """)
                 .user(prompt)
+                .tools(ticketSupportTools)
                 .call()
                 .entity(AiTriageResult.class);
 
@@ -62,9 +77,11 @@ public class TicketTriageAgentService {
 
     private String buildPrompt(Ticket ticket) {
         return """
-                You are an AI support triage agent.
+                Analyze the support ticket and return a structured result.
 
-                Your job is to analyze the support ticket and return a structured result.
+                You should inspect the current ticket comments first.
+                If classification is unclear, inspect recent similar tickets by category.
+                If you choose a team, you may inspect active agents in that team.
 
                 Allowed ticket categories:
                 - BILLING
@@ -92,13 +109,16 @@ public class TicketTriageAgentService {
                 - Return only valid enum values for category and priority
                 - Return only one of the allowed assignedTeam values
 
-                Return the result in a format that can be mapped directly to this Java structure:
+                Return the result in this JSON shape:
                 {
-                "category": "...",
-                "priority": "...",
-                "assignedTeam": "...",
-                "aiSummary": "..."
+                "category": "BILLING",
+                "priority": "HIGH",
+                "assignedTeam": "BILLING",
+                "aiSummary": "Short summary"
                 }
+
+                Current ticket id:
+                %d
 
                 Ticket title:
                 %s
@@ -112,6 +132,7 @@ public class TicketTriageAgentService {
                 Customer email:
                 %s
                 """.formatted(
+                ticket.getId(),
                 ticket.getTitle(),
                 ticket.getDescription(),
                 ticket.getCustomerName(),
