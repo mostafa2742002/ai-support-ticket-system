@@ -9,6 +9,7 @@ import com.mostafa.aisupport.ticket.api.dto.CreateTicketRequest;
 import com.mostafa.aisupport.ticket.api.dto.TicketResponse;
 import com.mostafa.aisupport.ticket.api.dto.UpdateTicketStatusRequest;
 import com.mostafa.aisupport.ticket.application.TicketService;
+import com.mostafa.aisupport.ticket.application.TicketWorkflowService;
 import com.mostafa.aisupport.ticket.domain.entity.Ticket;
 
 import jakarta.validation.Valid;
@@ -20,14 +21,19 @@ import java.util.List;
 public class TicketController {
 
     private final TicketService ticketService;
+    private final TicketWorkflowService ticketWorkflowService;
 
-    public TicketController(TicketService ticketService) {
+    public TicketController(
+            TicketService ticketService,
+            TicketWorkflowService ticketWorkflowService
+    ) {
         this.ticketService = ticketService;
+        this.ticketWorkflowService = ticketWorkflowService;
     }
 
     @PostMapping
     public TicketResponse createTicket(@Valid @RequestBody CreateTicketRequest request) {
-        Ticket ticket = ticketService.createTicket(
+        Ticket ticket = ticketWorkflowService.createTicketAndRunTriage(
                 request.title(),
                 request.description(),
                 request.customerName(),
