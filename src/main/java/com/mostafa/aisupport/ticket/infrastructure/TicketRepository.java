@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.mostafa.aisupport.ticket.domain.entity.Ticket;
 import com.mostafa.aisupport.ticket.domain.enums.TicketPriority;
 import com.mostafa.aisupport.ticket.domain.enums.TicketStatus;
-
+import com.mostafa.aisupport.ticket.domain.enums.TicketCategory;
 import java.util.List;
 
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
@@ -15,4 +15,6 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     List<Ticket> findByPriority(TicketPriority priority);
 
     List<Ticket> findByAssignedTeam(String assignedTeam);
+
+    List<Ticket> findTop5ByCategoryOrderByCreatedAtDesc( TicketCategory category);
 }
