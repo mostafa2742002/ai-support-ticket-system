@@ -1,0 +1,10 @@
+POST http://localhost:8081/api/tickets
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "I was charged twice",
+  "description": "My card was charged twice for the premium subscription and it still does not work.",
+  "customerName": "Mostafa Mahmoud",
+  "customerEmail": "mostafa@email.com"
+}
