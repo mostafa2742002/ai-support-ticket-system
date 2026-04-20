@@ -92,6 +92,14 @@ public class TicketTriageAgentService {
                 - Return only valid enum values for category and priority
                 - Return only one of the allowed assignedTeam values
 
+                Return the result in a format that can be mapped directly to this Java structure:
+                {
+                "category": "...",
+                "priority": "...",
+                "assignedTeam": "...",
+                "aiSummary": "..."
+                }
+
                 Ticket title:
                 %s
 
