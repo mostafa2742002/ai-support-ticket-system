@@ -1,3 +1,16 @@
 spring:
   application:
     name: ai-support-ticket-system
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ai_support_ticket_system
+    username: postgres
+    password: postgres123
+  
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true  
+      open-in-view: false
