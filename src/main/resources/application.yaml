@@ -1,9 +1,12 @@
+server:
+  port: 8081
+
 spring:
   application:
     name: ai-support-ticket-system
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/ai_support_ticket_system
+    url: jdbc:postgresql://localhost:5432/ai_support_ticket_db
     username: postgres
     password: postgres123
   
