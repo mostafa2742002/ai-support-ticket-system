@@ -333,7 +333,7 @@ Contributions are welcome! Please:
 Junior Java Backend Developer
 
 - 🐙 GitHub: [mostafa2742002](https://github.com/mostafa2742002)
-- 💼 LinkedIn: [Add your LinkedIn URL here](https://linkedin.com/in/your-profile)
+- 💼 LinkedIn: [Mostafa Mahmoud Ismail](https://www.linkedin.com/in/mostafa-mahmoud-ismail/)
 
 ---
 
