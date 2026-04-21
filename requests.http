@@ -8,3 +8,13 @@ Accept: application/json
   "customerName": "Ahmed Mostafa",
   "customerEmail": "ahmed@email.com"
 }
+
+
+POST http://localhost:8081/api/auth/login
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "agent",
+  "password": "agent123"
+}
