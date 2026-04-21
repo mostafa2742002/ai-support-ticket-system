@@ -27,3 +27,10 @@ spring:
       base-url: http://localhost:11434
       chat:
         model: llama3.1:8b
+
+app:
+  security:
+    jwt:
+      secret: 12345678901234567890123456789012
+      expiration: 86400000
+
