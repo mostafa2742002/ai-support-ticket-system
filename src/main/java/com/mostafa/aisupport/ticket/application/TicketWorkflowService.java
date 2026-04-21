@@ -1,6 +1,7 @@
 package com.mostafa.aisupport.ticket.application;
 
 import com.mostafa.aisupport.agent.application.AgentAssignmentService;
+import com.mostafa.aisupport.ai.api.dto.AiTriageResult;
 import com.mostafa.aisupport.ai.application.TicketTriageAgentService;
 import com.mostafa.aisupport.comment.application.TicketCommentService;
 import com.mostafa.aisupport.ticket.domain.entity.Ticket;
@@ -70,13 +71,15 @@ public class TicketWorkflowService {
 
         } catch (Exception ex) {
             ticketCommentService.addComment(
-                    createdTicket.getId(),
-                    AuthorType.AI,
-                    "AI Triage Agent",
-                    "Automatic triage failed: " + ex.getMessage()
-            );
+                createdTicket.getId(),
+                AuthorType.AI,
+                "AI Triage Agent",
+                "Automatic triage failed: " + ex.getMessage()
+                );
         }
 
         return ticketService.getTicketById(createdTicket.getId());
     }
+
+
 }
