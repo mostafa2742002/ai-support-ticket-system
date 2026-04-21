@@ -3,8 +3,8 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "title": "My subscription payment failed",
-  "description": "I got charged twice and still cannot access my premium account.",
-  "customerName": "Mostafa Mahmoud",
-  "customerEmail": "mostafa@email.com"
+  "title": "Charged twice",
+  "description": "My card was charged twice for premium plan.",
+  "customerName": "Ahmed Mostafa",
+  "customerEmail": "ahmed@email.com"
 }

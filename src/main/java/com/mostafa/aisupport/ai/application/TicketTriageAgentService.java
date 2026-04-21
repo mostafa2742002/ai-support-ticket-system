@@ -53,6 +53,10 @@ public class TicketTriageAgentService {
                 .tools(ticketSupportTools)
                 .call()
                 .entity(AiTriageResult.class);
+        
+        System.out.println("AI triage result = " + result);
+
+        validateTriageResult(result);
 
         ticketService.applyAiTriageResult(
                 ticketId,
@@ -139,4 +143,28 @@ public class TicketTriageAgentService {
                 ticket.getCustomerEmail()
         );
     }
+
+
+        private void validateTriageResult(AiTriageResult result) {
+                if (result == null) {
+                        throw new IllegalStateException("AI triage result is null");
+                }
+
+                if (result.category() == null) {
+                        throw new IllegalStateException("AI triage result missing category");
+                }
+
+                if (result.priority() == null) {
+                        throw new IllegalStateException("AI triage result missing priority");
+                }
+
+                if (result.assignedTeam() == null || result.assignedTeam().isBlank()) {
+                        throw new IllegalStateException("AI triage result missing assignedTeam");
+                }
+
+                if (result.aiSummary() == null || result.aiSummary().isBlank()) {
+                        throw new IllegalStateException("AI triage result missing aiSummary");
+                }
+        }
+
 }
