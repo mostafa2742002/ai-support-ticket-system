@@ -1,8 +1,5 @@
 package com.mostafa.aisupport.ticket.api.controller;
 
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
 import com.mostafa.aisupport.ticket.api.dto.AssignAgentRequest;
 import com.mostafa.aisupport.ticket.api.dto.AssignTeamRequest;
 import com.mostafa.aisupport.ticket.api.dto.CreateTicketRequest;
@@ -12,12 +9,19 @@ import com.mostafa.aisupport.ticket.application.TicketService;
 import com.mostafa.aisupport.ticket.application.TicketWorkflowService;
 import com.mostafa.aisupport.ticket.domain.entity.Ticket;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/tickets")
+@RequestMapping(value = "/api/tickets", produces = MediaType.APPLICATION_JSON_VALUE)
 @Validated
+@Tag(name = "Tickets", description = "Ticket management endpoints")
 public class TicketController {
 
     private final TicketService ticketService;
@@ -31,7 +35,11 @@ public class TicketController {
         this.ticketWorkflowService = ticketWorkflowService;
     }
 
-    @PostMapping
+    @Operation(
+            summary = "Create a new support ticket",
+            description = "Public endpoint. Creates a ticket and automatically runs AI triage and routing."
+    )
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public TicketResponse createTicket(@Valid @RequestBody CreateTicketRequest request) {
         Ticket ticket = ticketWorkflowService.createTicketAndRunTriage(
                 request.title(),
@@ -43,11 +51,19 @@ public class TicketController {
         return TicketResponse.from(ticket);
     }
 
+    @Operation(
+            summary = "Get ticket by ID",
+            description = "Protected endpoint. Returns the full details of a ticket."
+    )
     @GetMapping("/{id}")
     public TicketResponse getTicketById(@PathVariable Long id) {
         return TicketResponse.from(ticketService.getTicketById(id));
     }
 
+    @Operation(
+            summary = "Get all tickets",
+            description = "Protected endpoint. Returns all tickets in the system."
+    )
     @GetMapping
     public List<TicketResponse> getAllTickets() {
         return ticketService.getAllTickets()
@@ -56,7 +72,11 @@ public class TicketController {
                 .toList();
     }
 
-    @PatchMapping("/{id}/assign-team")
+    @Operation(
+            summary = "Assign ticket to team",
+            description = "Protected endpoint. Updates the assigned support team for a ticket."
+    )
+    @PatchMapping(value = "/{id}/assign-team", consumes = MediaType.APPLICATION_JSON_VALUE)
     public TicketResponse assignTeam(
             @PathVariable Long id,
             @Valid @RequestBody AssignTeamRequest request
@@ -66,7 +86,11 @@ public class TicketController {
         );
     }
 
-    @PatchMapping("/{id}/assign-agent")
+    @Operation(
+            summary = "Assign ticket to agent",
+            description = "Protected endpoint. Updates the assigned agent for a ticket."
+    )
+    @PatchMapping(value = "/{id}/assign-agent", consumes = MediaType.APPLICATION_JSON_VALUE)
     public TicketResponse assignAgent(
             @PathVariable Long id,
             @Valid @RequestBody AssignAgentRequest request
@@ -76,7 +100,11 @@ public class TicketController {
         );
     }
 
-    @PatchMapping("/{id}/status")
+    @Operation(
+            summary = "Update ticket status",
+            description = "Protected endpoint. Changes the workflow status of a ticket."
+    )
+    @PatchMapping(value = "/{id}/status", consumes = MediaType.APPLICATION_JSON_VALUE)
     public TicketResponse updateStatus(
             @PathVariable Long id,
             @Valid @RequestBody UpdateTicketStatusRequest request
