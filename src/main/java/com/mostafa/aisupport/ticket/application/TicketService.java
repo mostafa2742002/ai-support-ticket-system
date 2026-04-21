@@ -76,17 +76,35 @@ public class TicketService {
 
 
     public Ticket applyAiTriageResult(
-        Long ticketId,
-        String assignedTeam,
-        String aiSummary,
-        TicketCategory category,
-        TicketPriority priority
-    ) {
+                Long ticketId,
+                String assignedTeam,
+                String aiSummary,
+                TicketCategory category,
+                TicketPriority priority
+                ) {
         Ticket ticket = getTicketById(ticketId);
+
+        if (category == null) {
+            throw new IllegalArgumentException("Category must not be null");
+        }
+
+        if (priority == null) {
+            throw new IllegalArgumentException("Priority must not be null");
+        }
+
+        if (assignedTeam == null || assignedTeam.isBlank()) {
+            throw new IllegalArgumentException("Assigned team must not be blank");
+        }
+
+        if (aiSummary == null || aiSummary.isBlank()) {
+            throw new IllegalArgumentException("AI summary must not be blank");
+        }
+
         ticket.updateCategory(category);
         ticket.updatePriority(priority);
         ticket.assignTeam(assignedTeam);
         ticket.updateAiSummary(aiSummary);
+
         return ticketRepository.save(ticket);
     }
 }
