@@ -7,20 +7,21 @@
 
 An AI-powered support ticket routing system built with **Spring Boot**, **Spring AI**, **Ollama**, **PostgreSQL**, and **JWT Security**.
 
-The system automatically **classifies** incoming support tickets, **prioritizes** them, **routes** them to the correct team, **assigns** them to active support agents, and now also helps customers ask about their ticket status through a dedicated public assistant.
+It automates the full support flow: customers create tickets, AI triages and routes them, support agents manage them securely, and customers can later ask about ticket progress through a public assistant.
 
 ---
 
 ## 🎯 Why This Project?
 
-Many support systems still rely on manual triage:
+Many support systems still rely on manual triage and disconnected workflows:
 
 - ❌ Humans read every ticket first
 - ❌ Routing decisions are slow and inconsistent
 - ❌ Urgent issues may wait in queues
 - ❌ Wrong team assignment increases resolution time
+- ❌ Customers have no easy way to check ticket progress
 
-**This project solves it** by using AI-driven triage and automated routing.
+**This project solves that** with AI-driven triage, automated routing, secure internal workflows, and a customer-facing ticket assistant.
 
 ---
 
@@ -67,6 +68,8 @@ Protected by JWT authentication.
 }
 ```
 
+The ticket is then triaged automatically, assigned to a team, and routed to an available agent.
+
 ### AI Processing Output
 
 ```json
@@ -91,25 +94,24 @@ Protected by JWT authentication.
 
 ## 📸 Screenshots
 
-The screenshots below are loaded from [docs/screenshots](docs/screenshots).
+Put screenshots in [docs/screenshots](docs/screenshots). The examples below are already wired to the files in that folder.
 
-### Customer and Ticket Flow
+### Customer Flow
 
-![Customer asks about ticket status](docs/screenshots/customer%20ask%20about%20his%20ticket.png)
+| Screenshot | What it shows |
+|---|---|
+| ![Customer asks about ticket status](docs/screenshots/customer%20ask%20about%20his%20ticket.png) | Public customer assistant for checking ticket progress |
+| ![Ticket after AI triage](docs/screenshots/ticket%20after%20ai%20triage.png) | AI triage output after ticket submission |
 
-![Ticket after AI triage](docs/screenshots/ticket%20after%20ai%20triage.png)
+### Docs and Operations
 
-### Docs and Monitoring
-
-![Swagger documentation](docs/screenshots/swagger%20doc.png)
-
-![Swagger documentation, second view](docs/screenshots/swagger%20doc%201.png)
-
-![Prometheus query](docs/screenshots/promentheus%20query.png)
-
-![Grafana charts](docs/screenshots/gravana%20charts.png)
-
-![Health check endpoint](docs/screenshots/health%20check%20end%20point%20.png)
+| Screenshot | What it shows |
+|---|---|
+| ![Swagger documentation](docs/screenshots/swagger%20doc.png) | Swagger UI overview |
+| ![Swagger documentation, second view](docs/screenshots/swagger%20doc%201.png) | Additional Swagger UI view |
+| ![Prometheus query](docs/screenshots/promentheus%20query.png) | Prometheus metric query |
+| ![Grafana charts](docs/screenshots/gravana%20charts.png) | Grafana dashboard charts |
+| ![Health check endpoint](docs/screenshots/health%20check%20end%20point%20.png) | Actuator health endpoint |
 
 ---
 
@@ -211,6 +213,19 @@ The AI can invoke backend tools dynamically:
 
 ### Documentation
 - **Swagger UI** - Interactive API docs
+
+### Observability
+- **Spring Boot Actuator** - Application health and metrics endpoints
+- **Prometheus** - Metrics collection and scraping
+- **Grafana** - Monitoring dashboards and visualization
+
+### Current Highlights
+
+- Public ticket creation with automatic AI triage and routing
+- Customer ticket-status assistant using ticket ID and email verification
+- JWT-protected support APIs with role-based access control
+- Ticket comments, assignments, and status management
+- Observability endpoints with Prometheus and Grafana dashboards
 
 ---
 
@@ -315,7 +330,6 @@ Interactive API testing directly in your browser.
 - [ ] **SLA Management** - SLA-aware prioritization and escalation
 - [ ] **Notifications** - Email alerts for agents and customers
 - [ ] **Dashboard** - Real-time metrics and analytics
-- [ ] **Observability** - Prometheus + Grafana monitoring
 - [ ] **RBAC** - Role-based access control from database
 - [ ] **Token Refresh** - Refresh token mechanism
 - [ ] **Offline Support** - Queue tickets during AI downtime
@@ -331,6 +345,7 @@ Interactive API testing directly in your browser.
 ✅ Public customer assistant for ticket status questions  
 ✅ Secure JWT authentication  
 ✅ Role-based authorization for internal actions  
+✅ Operational monitoring with Actuator, Prometheus, and Grafana  
 ✅ Structured database design  
 ✅ Repository pattern for data access  
 ✅ Spring AI tool calling  
