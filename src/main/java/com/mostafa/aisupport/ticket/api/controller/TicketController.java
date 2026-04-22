@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,6 +56,7 @@ public class TicketController {
             summary = "Get ticket by ID",
             description = "Protected endpoint. Returns the full details of a ticket."
     )
+    @PreAuthorize("hasAnyRole('AGENT', 'ADMIN')")
     @GetMapping("/{id}")
     public TicketResponse getTicketById(@PathVariable Long id) {
         return TicketResponse.from(ticketService.getTicketById(id));
@@ -64,6 +66,7 @@ public class TicketController {
             summary = "Get all tickets",
             description = "Protected endpoint. Returns all tickets in the system."
     )
+    @PreAuthorize("hasAnyRole('AGENT', 'ADMIN')")
     @GetMapping
     public List<TicketResponse> getAllTickets() {
         return ticketService.getAllTickets()
@@ -76,6 +79,7 @@ public class TicketController {
             summary = "Assign ticket to team",
             description = "Protected endpoint. Updates the assigned support team for a ticket."
     )
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping(value = "/{id}/assign-team", consumes = MediaType.APPLICATION_JSON_VALUE)
     public TicketResponse assignTeam(
             @PathVariable Long id,
@@ -90,6 +94,7 @@ public class TicketController {
             summary = "Assign ticket to agent",
             description = "Protected endpoint. Updates the assigned agent for a ticket."
     )
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping(value = "/{id}/assign-agent", consumes = MediaType.APPLICATION_JSON_VALUE)
     public TicketResponse assignAgent(
             @PathVariable Long id,
@@ -104,7 +109,8 @@ public class TicketController {
             summary = "Update ticket status",
             description = "Protected endpoint. Changes the workflow status of a ticket."
     )
-    @PatchMapping(value = "/{id}/status", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAnyRole('AGENT', 'ADMIN')")
+    @PatchMapping(value = "/{id}/status", consumes = MediaType.APPLICATION_JSON_VALUE) 
     public TicketResponse updateStatus(
             @PathVariable Long id,
             @Valid @RequestBody UpdateTicketStatusRequest request
