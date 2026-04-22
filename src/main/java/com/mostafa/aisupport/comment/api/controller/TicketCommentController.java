@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -33,6 +34,7 @@ public class TicketCommentController {
             summary = "Add comment to ticket",
             description = "Protected endpoint. Adds a comment from customer, agent, or AI to a ticket."
     )
+    @PreAuthorize("hasAnyRole('AGENT', 'ADMIN')")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public TicketCommentResponse addComment(
             @PathVariable Long ticketId,
@@ -52,6 +54,7 @@ public class TicketCommentController {
             summary = "Get ticket comments",
             description = "Protected endpoint. Returns ticket comments in chronological order."
     )
+    @PreAuthorize("hasAnyRole('AGENT', 'ADMIN')")
     @GetMapping
     public List<TicketCommentResponse> getComments(@PathVariable Long ticketId) {
         return ticketCommentService.getCommentsByTicketId(ticketId)
