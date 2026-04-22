@@ -11,6 +11,7 @@ import com.mostafa.aisupport.ticket.domain.entity.Ticket;
 import com.mostafa.aisupport.ticket.domain.enums.TicketCategory;
 import com.mostafa.aisupport.ticket.domain.enums.TicketPriority;
 import com.mostafa.aisupport.ticket.domain.enums.TicketStatus;
+import com.mostafa.aisupport.ticket.domain.enums.TriageStatus;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,7 @@ class TicketControllerTest {
                 TicketStatus.OPEN,
                 TicketCategory.BILLING,
                 TicketPriority.HIGH,
+                TriageStatus.PENDING,
                 "BILLING",
                 "Sara",
                 "Customer charged twice for premium plan",
