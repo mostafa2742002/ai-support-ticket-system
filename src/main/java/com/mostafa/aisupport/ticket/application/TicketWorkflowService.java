@@ -1,12 +1,12 @@
 package com.mostafa.aisupport.ticket.application;
 
 import com.mostafa.aisupport.agent.application.AgentAssignmentService;
-import com.mostafa.aisupport.ai.api.dto.AiTriageResult;
 import com.mostafa.aisupport.ai.application.TicketTriageAgentService;
 import com.mostafa.aisupport.comment.application.TicketCommentService;
 import com.mostafa.aisupport.ticket.domain.entity.Ticket;
 import com.mostafa.aisupport.ticket.domain.enums.AuthorType;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,13 +16,13 @@ public class TicketWorkflowService {
     private final TicketTriageAgentService ticketTriageAgentService;
     private final TicketCommentService ticketCommentService;
     private final AgentAssignmentService agentAssignmentService;
+    private static final Logger log = LoggerFactory.getLogger(TicketWorkflowService.class);
 
     public TicketWorkflowService(
             TicketService ticketService,
             TicketTriageAgentService ticketTriageAgentService,
             TicketCommentService ticketCommentService,
-            AgentAssignmentService agentAssignmentService
-    ) {
+            AgentAssignmentService agentAssignmentService) {
         this.ticketService = ticketService;
         this.ticketTriageAgentService = ticketTriageAgentService;
         this.ticketCommentService = ticketCommentService;
@@ -33,17 +33,18 @@ public class TicketWorkflowService {
             String title,
             String description,
             String customerName,
-            String customerEmail
-    ) {
+            String customerEmail) {
         Ticket createdTicket = ticketService.createTicket(
                 title,
                 description,
                 customerName,
-                customerEmail
-        );
+                customerEmail);
+        
+        log.info("Ticket created with id={}", createdTicket.getId());
 
         try {
             ticketTriageAgentService.triageTicket(createdTicket.getId());
+            log.info("AI triage completed for ticketId={}", createdTicket.getId());
 
             Ticket updatedTicket = ticketService.getTicketById(createdTicket.getId());
 
@@ -51,35 +52,35 @@ public class TicketWorkflowService {
                     && updatedTicket.getAssignedTo() == null) {
 
                 String agentName = agentAssignmentService.findBestAgentName(
-                        updatedTicket.getAssignedTeam()
-                );
+                        updatedTicket.getAssignedTeam());
 
                 if (agentName != null) {
                     ticketService.assignTicketToAgent(
                             updatedTicket.getId(),
-                            agentName
-                    );
+                            agentName);
+                    
+                    log.info("Ticket {} assigned to agent {}", updatedTicket.getId(), agentName);
 
                     ticketCommentService.addComment(
                             updatedTicket.getId(),
                             AuthorType.AI,
                             "Routing Engine",
-                            "Automatically assigned to agent: " + agentName
-                    );
+                            "Automatically assigned to agent: " + agentName);
                 }
             }
 
         } catch (Exception ex) {
+            log.error("Automatic triage failed for ticketId={}", createdTicket.getId(), ex);
             ticketCommentService.addComment(
-                createdTicket.getId(),
-                AuthorType.AI,
-                "AI Triage Agent",
-                "Automatic triage failed: " + ex.getMessage()
-                );
+                    createdTicket.getId(),
+                    AuthorType.AI,
+                    "AI Triage Agent",
+                    "Automatic triage failed: " + ex.getMessage());
         }
+
+        
 
         return ticketService.getTicketById(createdTicket.getId());
     }
-
 
 }
