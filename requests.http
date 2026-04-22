@@ -19,3 +19,16 @@ Accept: application/json
   "username": "agent",
   "password": "agent123"
 }
+
+
+###
+POST /api/customer/tickets/ask
+Content-Type: application/json
+Accept: application/json
+
+{
+  "ticketId": 15,
+  "customerEmail": "ahmed@email.com",
+  "question": "What is the status of my ticket and has anyone been assigned to it?"
+}
+
