@@ -7,7 +7,7 @@
 
 An AI-powered support ticket routing system built with **Spring Boot**, **Spring AI**, **Ollama**, **PostgreSQL**, and **JWT Security**.
 
-The system automatically **classifies** incoming support tickets, **prioritizes** them, **routes** them to the correct team, and **assigns** them to active support agents.
+The system automatically **classifies** incoming support tickets, **prioritizes** them, **routes** them to the correct team, **assigns** them to active support agents, and now also helps customers ask about their ticket status through a dedicated public assistant.
 
 ---
 
@@ -36,6 +36,7 @@ Many support systems still rely on manual triage:
   - Assigned team
   - AI-generated summary
 - ✅ Automatic assignment to available support agent
+- ✅ Ask questions about an existing ticket using ticket ID + customer email
 
 ### 🔐 Internal Support Flow
 
@@ -49,6 +50,7 @@ Protected by JWT authentication.
 - ✅ Add comments and notes
 - ✅ View ticket audit trail
 - ✅ Re-run AI triage manually
+- ✅ Role-based access for ticket management, comments, and admin-only AI triage
 
 ---
 
@@ -84,6 +86,50 @@ Protected by JWT authentication.
   "assignedAgent": "Sara"
 }
 ```
+
+---
+
+## 📸 Screenshots
+
+The screenshots below are loaded from [docs/screenshots](docs/screenshots).
+
+### Customer and Ticket Flow
+
+![Customer asks about ticket status](docs/screenshots/customer%20ask%20about%20his%20ticket.png)
+
+![Ticket after AI triage](docs/screenshots/ticket%20after%20ai%20triage.png)
+
+### Docs and Monitoring
+
+![Swagger documentation](docs/screenshots/swagger%20doc.png)
+
+![Swagger documentation, second view](docs/screenshots/swagger%20doc%201.png)
+
+![Prometheus query](docs/screenshots/promentheus%20query.png)
+
+![Grafana charts](docs/screenshots/gravana%20charts.png)
+
+![Health check endpoint](docs/screenshots/health%20check%20end%20point%20.png)
+
+---
+
+## 🔎 Current API Surface
+
+The main endpoints currently exposed by the application are:
+
+| Endpoint | Access | Purpose |
+|----------|--------|---------|
+| `POST /api/tickets` | Public | Create a new support ticket and trigger AI triage |
+| `POST /api/customer/tickets/ask` | Public | Ask about ticket status and progress using ticket ID + customer email |
+| `POST /api/auth/login` | Public | Authenticate internal support users and receive a JWT |
+| `GET /api/tickets` | Agent/Admin | List tickets |
+| `GET /api/tickets/{id}` | Agent/Admin | View a ticket in detail |
+| `PATCH /api/tickets/{id}/status` | Agent/Admin | Update ticket status |
+| `PATCH /api/tickets/{id}/assign-team` | Admin | Reassign the ticket team |
+| `PATCH /api/tickets/{id}/assign-agent` | Admin | Reassign the ticket agent |
+| `GET /api/tickets/{ticketId}/comments` | Agent/Admin | Read ticket comments |
+| `POST /api/tickets/{ticketId}/comments` | Agent/Admin | Add a comment to a ticket |
+| `POST /api/ai/tickets/{ticketId}/triage` | Admin | Manually re-run AI triage |
 
 ---
 
@@ -131,8 +177,9 @@ The AI can invoke backend tools dynamically:
 | Endpoint | Auth Required | Purpose |
 |----------|---|---------|
 | `POST /api/tickets` | ❌ No | Create ticket (public) |
-| `/api/tickets/**` | ✅ Yes | Ticket management (internal) |
-| `/api/ai/**` | ✅ Yes | AI operations (internal) |
+| `POST /api/customer/tickets/ask` | ❌ No | Customer ticket assistant |
+| `/api/tickets/**` | ✅ Yes | Ticket management and comments (internal) |
+| `/api/ai/**` | ✅ Yes | AI operations (admin-only triage endpoint) |
 | `/api/auth/login` | ❌ No | User login |
 
 ---
@@ -146,6 +193,7 @@ The AI can invoke backend tools dynamically:
 - **Spring Data JPA** - Database access
 - **Spring Security** - Authentication
 - **Spring AI** - AI integration
+- **Spring Boot Actuator** - Health and metrics endpoints
 
 ### Database
 - **PostgreSQL** 15+
@@ -280,7 +328,9 @@ Interactive API testing directly in your browser.
 ✅ Clean layered architecture in Spring Boot  
 ✅ Real-world REST API design  
 ✅ AI integration in business workflows  
+✅ Public customer assistant for ticket status questions  
 ✅ Secure JWT authentication  
+✅ Role-based authorization for internal actions  
 ✅ Structured database design  
 ✅ Repository pattern for data access  
 ✅ Spring AI tool calling  
@@ -308,6 +358,8 @@ ai-support-ticket-system/
 ├── src/main/resources/
 │   ├── application.yaml    # Application config
 │   └── db/migration/       # Flyway migrations
+├── docs/
+│   └── screenshots/        # Drop UI screenshots here
 ├── src/test/               # Unit & integration tests
 ├── pom.xml                 # Maven configuration
 └── README.md
