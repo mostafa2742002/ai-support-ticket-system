@@ -39,7 +39,9 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-                .httpBasic(Customizer.withDefaults());
+                .httpBasic(D -> D.disable())
+                .formLogin(D -> D.disable());
+            ;
 
         return http.build();
     }
