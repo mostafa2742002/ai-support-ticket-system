@@ -5,8 +5,8 @@ Accept: application/json
 {
   "title": "Charged twice",
   "description": "My card was charged twice for premium plan.",
-  "customerName": "Ahmed Mostafa",
-  "customerEmail": "ahmed@email.com"
+  "customerName": "ahmed",
+  "customerEmail": "ahmedmos@email.com"
 }
 
 ###
