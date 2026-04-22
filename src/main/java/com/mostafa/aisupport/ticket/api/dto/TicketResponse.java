@@ -6,6 +6,7 @@ import com.mostafa.aisupport.ticket.domain.entity.Ticket;
 import com.mostafa.aisupport.ticket.domain.enums.TicketCategory;
 import com.mostafa.aisupport.ticket.domain.enums.TicketPriority;
 import com.mostafa.aisupport.ticket.domain.enums.TicketStatus;
+import com.mostafa.aisupport.ticket.domain.enums.TriageStatus;
 
 public record TicketResponse(
         Long id,
@@ -16,6 +17,7 @@ public record TicketResponse(
         TicketStatus status,
         TicketCategory category,
         TicketPriority priority,
+        TriageStatus triageStatus,
         String assignedTeam,
         String assignedTo,
         String aiSummary,
@@ -32,6 +34,7 @@ public record TicketResponse(
                 ticket.getStatus(),
                 ticket.getCategory(),
                 ticket.getPriority(),
+                ticket.getTriageStatus(),
                 ticket.getAssignedTeam(),
                 ticket.getAssignedTo(),
                 ticket.getAiSummary(),
