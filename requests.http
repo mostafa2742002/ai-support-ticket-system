@@ -22,13 +22,13 @@ Accept: application/json
 
 
 ###
-POST /api/customer/tickets/ask
+POST http://localhost:8081/api/customer/tickets/ask
 Content-Type: application/json
 Accept: application/json
 
 {
-  "ticketId": 15,
-  "customerEmail": "ahmed@email.com",
+  "ticketId": 11,
+  "customerEmail": "ahmedmos@email.com",
   "question": "What is the status of my ticket and has anyone been assigned to it?"
 }
 
