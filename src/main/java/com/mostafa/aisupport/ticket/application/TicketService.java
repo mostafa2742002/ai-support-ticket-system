@@ -9,6 +9,7 @@ import com.mostafa.aisupport.ticket.domain.entity.Ticket;
 import com.mostafa.aisupport.ticket.domain.enums.TicketCategory;
 import com.mostafa.aisupport.ticket.domain.enums.TicketPriority;
 import com.mostafa.aisupport.ticket.domain.enums.TicketStatus;
+import com.mostafa.aisupport.ticket.domain.enums.TriageStatus;
 import com.mostafa.aisupport.ticket.infrastructure.TicketRepository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -105,6 +106,18 @@ public class TicketService {
         ticket.assignTeam(assignedTeam);
         ticket.updateAiSummary(aiSummary);
 
+        return ticketRepository.save(ticket);
+    }
+
+    public Ticket markTriageCompleted(Long ticketId) {
+        Ticket ticket = getTicketById(ticketId);
+        ticket.setTriageStatus(TriageStatus.COMPLETED);
+        return ticketRepository.save(ticket);
+    }
+
+    public Ticket markTriageFailed(Long ticketId) {
+        Ticket ticket = getTicketById(ticketId);
+        ticket.setTriageStatus(TriageStatus.FAILED);
         return ticketRepository.save(ticket);
     }
 }
