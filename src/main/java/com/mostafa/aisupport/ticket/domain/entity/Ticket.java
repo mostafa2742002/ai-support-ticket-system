@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import com.mostafa.aisupport.ticket.domain.enums.TicketCategory;
 import com.mostafa.aisupport.ticket.domain.enums.TicketPriority;
 import com.mostafa.aisupport.ticket.domain.enums.TicketStatus;
+import com.mostafa.aisupport.ticket.domain.enums.TriageStatus;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -53,6 +54,10 @@ public class Ticket {
     @Column(nullable = false, length = 20)
     private TicketPriority priority;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "triage_status", nullable = false, length = 20)
+    private TriageStatus triageStatus;
+
     @Column(name = "assigned_team", length = 50)
     private String assignedTeam;
 
@@ -85,6 +90,7 @@ public class Ticket {
                 TicketStatus.OPEN,
                 null,
                 TicketPriority.MEDIUM,
+                TriageStatus.PENDING,
                 null,
                 null,
                 null,
